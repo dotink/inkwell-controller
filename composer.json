@@ -1,0 +1,19 @@
+{
+	"name": "dotink/inkwell-controller",
+	"description": "Baseline controller for inKWell",
+	"keywords": ["routing", "controllers"],
+	"license": "AGPL 3.0",
+	"authors": [
+		{
+			"name": "Matthew J. Sahagian",
+			"email": "matt@imarc.net",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	}
+}
