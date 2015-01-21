@@ -1,6 +1,7 @@
 <?php namespace Inkwell\Controller
 {
 	use Auryn;
+	use Closure;
 	use Inkwell\Routing;
 
 	class Resolver implements Routing\ResolverInterface
