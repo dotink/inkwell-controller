@@ -9,9 +9,9 @@
 		/**
 		 *
 		 */
-		public function __construct(Auryn\Provider $container)
+		public function __construct(Auryn\Provider $broker)
 		{
-			$this->container = $container;
+			$this->broker = $broker;
 		}
 
 		/**
@@ -21,14 +21,14 @@
 		{
 			if ($action instanceof Closure) {
 				$class      = 'Inkwell\Controller\BaseController';
-				$controller = $this->container->make($class);
+				$controller = $this->broker->make($class);
 				$action     = $action->bindTo($controller, $controller);
 				$reference  = [$controller, '{closure}'];
 
 			} elseif (is_array($action)) {
 				$class      = $action[0];
 				$action     = $action[1];
-				$controller = $this->container->make($class);
+				$controller = $this->broker->make($class);
 				$reference  = [$controller, $action];
 
 			} else {

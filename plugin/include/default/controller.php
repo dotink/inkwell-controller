@@ -1,5 +1,5 @@
 <?php
 
-	return Affinity\Action::create(['core', 'routing'], function($app, $container) {
-		$app['resolver'] = $container->make('Inkwell\Routing\ResolverInterface');
+	return Affinity\Action::create(['core', 'routing'], function($app, $broker) {
+		$app['resolver'] = $broker->make('Inkwell\Routing\ResolverInterface');
 	});
