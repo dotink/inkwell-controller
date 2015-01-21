@@ -16,6 +16,15 @@
 		/**
 		 *
 		 */
+		public function __get($property)
+		{
+			return $this[$property];
+		}
+
+
+		/**
+		 *
+		 */
 		public function __invoke()
 		{
 			$action = $this->action;
@@ -23,6 +32,25 @@
 			return !($action instanceof Closure)
 				? $this->$action()
 				: $action();
+		}
+
+
+		/**
+		 *
+		 */
+		public function __prepare($action, $context = array())
+		{
+			$this->action  = $action;
+			$this->context = array_merge($this->context, $context);
+		}
+
+
+		/**
+		 *
+		 */
+		public function __set($property, $value)
+		{
+			return $this[$property] = $value;
 		}
 
 
@@ -86,16 +114,6 @@
 			}
 
 			return $this->context[$offset];
-		}
-
-
-		/**
-		 *
-		 */
-		public function __prepare($action, $context = array())
-		{
-			$this->action  = $action;
-			$this->context = array_merge($this->context, $context);
 		}
 	}
 }
