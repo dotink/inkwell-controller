@@ -19,20 +19,23 @@
 		 */
 		public function resolve($action, Array $context)
 		{
-			if ($action instanceof Closure) {
-				$class      = 'Inkwell\Controller\BaseController';
-				$controller = $this->broker->make($class);
-				$action     = $action->bindTo($controller, $controller);
-				$reference  = [$controller, '{closure}'];
+			$reference = FALSE;
 
-			} elseif (is_array($action)) {
-				$class      = $action[0];
-				$action     = $action[1];
-				$controller = $this->broker->make($class);
-				$reference  = [$controller, $action];
+			if (is_string($action)) {
+				if (strpos($action, '::') !== FALSE) {
+					list($class, $action) = explode('::', $action);
+					$controller           = $this->broker->make($class);
+					$reference            = [$controller, $action];
 
-			} else {
-				$reference  = [$action];
+				} elseif (function_exists($action)) {
+					$reference = $action;
+				}
+
+			} elseif ($action instanceof Closure) {
+				$controller           = $this->broker->make('Inkwell\Controller\BaseController');
+				$action               = $action->bindTo($controller, $controller);
+				$reference            = $controller;
+
 			}
 
 			if (isset($controller)) {
