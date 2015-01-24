@@ -1,12 +1,14 @@
 <?php namespace Inkwell\Controller
 {
-	use IW;
+	use IW\HTTP;
 	use Closure;
 	use ArrayAccess;
 	use Dotink\Flourish;
 
-	class BaseController implements ArrayAccess
+	class BaseController implements ArrayAccess, NegotiatorInterface
 	{
+		use Negotiator;
+
 		/**
 		 *
 		 */
@@ -114,6 +116,38 @@
 			}
 
 			return $this->context[$offset];
+		}
+
+
+		/**
+		 *
+		 */
+		protected function acceptLanguages($languages)
+		{
+
+		}
+
+
+		/**
+		 *
+		 */
+		protected function acceptMimeTypes($mimetypes)
+		{
+
+		}
+
+
+		/**
+		 *
+		 */
+		protected function authorizeMethod($allowed_methods)
+		{
+			settype($allowed_methods, 'array');
+
+			if (!in_array($this->request->getMethod(), $allowed_methods)) {
+				$this->response->setStatus(HTTP\NOT_ALLOWED);
+				$this->router->demit(NULL);
+			}
 		}
 	}
 }
