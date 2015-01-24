@@ -10,13 +10,29 @@
 		use Negotiator;
 
 		/**
+		 * The controller action associated with the current context.
 		 *
+		 * The action represents a method that will be called when the controller is invoked.
+		 *
+		 * @access private
+		 * @var string
+		 */
+		private $action = NULL;
+
+
+		/**
+		 * The current controller context.
+		 *
+		 * @access private
+		 * @var array
 		 */
 		private $context = array();
 
 
 		/**
+		 * Get a variable from the context
 		 *
+		 * @return mixed The value of the property
 		 */
 		public function __get($property)
 		{
@@ -142,12 +158,16 @@
 		 */
 		protected function authorizeMethod($allowed_methods)
 		{
+			$method = $this->request->getMethod();
+
 			settype($allowed_methods, 'array');
 
-			if (!in_array($this->request->getMethod(), $allowed_methods)) {
+			if (!in_array($method, $allowed_methods)) {
 				$this->response->setStatus(HTTP\NOT_ALLOWED);
 				$this->router->demit(NULL);
 			}
+
+			return $method;
 		}
 	}
 }
