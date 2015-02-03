@@ -24,6 +24,11 @@
 			if (is_string($action)) {
 				if (strpos($action, '::') !== FALSE) {
 					list($class, $action) = explode('::', $action);
+
+					if (!class_exists($class) || !is_callable([$class, $action])) {
+						$context['router']->defer();
+					}
+
 					$controller           = $this->broker->make($class);
 					$reference            = [$controller, $action];
 
