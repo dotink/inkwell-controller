@@ -29,17 +29,17 @@
 						$context['router']->defer();
 					}
 
-					$controller           = $this->broker->make($class);
-					$reference            = [$controller, $action];
+					$controller = $this->broker->make($class);
+					$reference  = [$controller, $action];
 
 				} elseif (function_exists($action)) {
 					$reference = $action;
 				}
 
 			} elseif ($action instanceof Closure) {
-				$controller           = $this->broker->make('Inkwell\Controller\BaseController');
-				$action               = $action->bindTo($controller, $controller);
-				$reference            = $controller;
+				$controller = $this->broker->make('Inkwell\Controller\BaseController');
+				$action     = $action->bindTo($controller, $controller);
+				$reference  = $controller;
 
 			}
 
