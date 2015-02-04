@@ -140,7 +140,12 @@
 		 */
 		protected function acceptLanguages($languages)
 		{
+			settype($languages, 'array');
 
+			return $this->languageNegotiator->getBest(
+				$this->request->headers->get('Accept-Language'),
+				$languages
+			);
 		}
 
 
@@ -149,7 +154,12 @@
 		 */
 		protected function acceptMimeTypes($mimetypes)
 		{
+			settype($mimetypes, 'array');
 
+			return $this->mimeTypeNegotiator->getBest(
+				$this->request->headers->get('Accept'),
+				$mimetypes
+			);
 		}
 
 
