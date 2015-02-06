@@ -193,6 +193,7 @@
 			if (!in_array($method, $allowed_methods)) {
 				$this->response->set(NULL);
 				$this->response->setStatus(HTTP\NOT_ALLOWED);
+				$this->response->headers->set('Allow', implode(', ', $allowed_methods));
 
 				throw new Flourish\YieldException();
 			}
