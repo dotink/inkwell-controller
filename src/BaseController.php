@@ -142,10 +142,19 @@
 		{
 			settype($languages, 'array');
 
-			return $this->languageNegotiator->getBest(
+			$accept = $this->languageNegotiator->getBest(
 				$this->request->headers->get('Accept-Language'),
 				$languages
 			);
+
+			if (!$accept) {
+				$this->response->set(NULL);
+				$this->response->setStatus(HTTP\NOT_ACCEPTABLE);
+
+				throw new Flourish\YieldException();
+			}
+
+			return $accept->getValue();
 		}
 
 
@@ -156,10 +165,19 @@
 		{
 			settype($mimetypes, 'array');
 
-			return $this->mimeTypeNegotiator->getBest(
+			$accept = $this->mimeTypeNegotiator->getBest(
 				$this->request->headers->get('Accept'),
 				$mimetypes
 			);
+
+			if (!$accept) {
+				$this->response->set(NULL);
+				$this->response->setStatus(HTTP\UNSUPPORTED_MIMETYPE);
+
+				throw new Flourish\YieldException();
+			}
+
+			return $accept->getValue();
 		}
 
 
@@ -173,8 +191,10 @@
 			settype($allowed_methods, 'array');
 
 			if (!in_array($method, $allowed_methods)) {
+				$this->response->set(NULL);
 				$this->response->setStatus(HTTP\NOT_ALLOWED);
-				$this->router->demit(NULL);
+
+				throw new Flourish\YieldException();
 			}
 
 			return $method;
