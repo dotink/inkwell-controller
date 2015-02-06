@@ -1,7 +1,9 @@
 <?php
 
 	return Affinity\Action::create(['core', 'routing'], function($app, $broker) {
-		$app['router.resolver'] = $broker->make('Inkwell\Routing\ResolverInterface');
+		$app['router.resolver'] = $broker->make('Inkwell\Routing\ResolverInterface', [
+			':broker' => $broker
+		]);
 
 		$broker->prepare('Inkwell\Controller\NegotiatorInterface', function($negotiator, $broker) {
 			$language_negotiator = $broker->make('Negotiation\LanguageNegotiator');
