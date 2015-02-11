@@ -5,9 +5,9 @@
 	use ArrayAccess;
 	use Dotink\Flourish;
 
-	class BaseController implements ArrayAccess, NegotiatorInterface
+	class BaseController implements ArrayAccess, NegotiatorConsumerInterface
 	{
-		use Negotiator;
+		use NegotiatorConsumer;
 
 		/**
 		 * The controller action associated with the current context.

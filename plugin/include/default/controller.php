@@ -5,7 +5,7 @@
 			':broker' => $broker
 		]);
 
-		$broker->prepare('Inkwell\Controller\NegotiatorInterface', function($negotiator, $broker) {
+		$broker->prepare('Inkwell\Controller\NegotiatorConsumerInterface', function($negotiator, $broker) {
 			$language_negotiator = $broker->make('Negotiation\LanguageNegotiator');
 			$mimetype_negotiator = $broker->make('Negotiation\FormatNegotiator');
 

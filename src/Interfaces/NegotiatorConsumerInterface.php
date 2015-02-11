@@ -1,6 +1,6 @@
 <?php namespace Inkwell\Controller
 {
-	interface NegotiatorInterface
+	interface NegotiatorConsumerInterface
 	{
 		public function setLanguageNegotiator($negotiator);
 		public function setMimeTypeNegotiator($negotiator);

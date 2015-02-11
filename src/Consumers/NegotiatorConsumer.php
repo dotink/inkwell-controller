@@ -1,6 +1,6 @@
 <?php namespace Inkwell\Controller
 {
-	trait Negotiator
+	trait NegotiatorConsumer
 	{
 		/**
 		 *
