@@ -14,10 +14,19 @@
 		 *
 		 * The action represents a method that will be called when the controller is invoked.
 		 *
-		 * @access private
+		 * @access protected
 		 * @var string
 		 */
-		private $action = NULL;
+		protected $action = NULL;
+
+
+		/**
+		 * The format decided from accept negotiation
+		 *
+		 * @access protected
+		 * @var string
+		 */
+		protected $format = NULL;
 
 
 		/**
@@ -177,7 +186,10 @@
 				throw new Flourish\YieldException();
 			}
 
-			return $accept->getValue();
+			$mime_type    = $accept->getValue();
+			$this->format = $this->mimeTypeNegotiator->getFormat($accept->getValue());
+
+			return $mime_type;
 		}
 
 
