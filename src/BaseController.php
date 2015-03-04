@@ -159,8 +159,7 @@
 			if (!$accept) {
 				$this->response->set(NULL);
 				$this->response->setStatus(HTTP\NOT_ACCEPTABLE);
-
-				throw new Flourish\YieldException();
+				$this->router->demit();
 			}
 
 			return $accept->getValue();
@@ -182,8 +181,7 @@
 			if (!$accept) {
 				$this->response->set(NULL);
 				$this->response->setStatus(HTTP\UNSUPPORTED_MIMETYPE);
-
-				throw new Flourish\YieldException();
+				$this->router->demit();
 			}
 
 			$mime_type    = $accept->getValue();
@@ -206,8 +204,7 @@
 				$this->response->set(NULL);
 				$this->response->setStatus(HTTP\NOT_ALLOWED);
 				$this->response->headers->set('Allow', implode(', ', $allowed_methods));
-
-				throw new Flourish\YieldException();
+				$this->router->demit();
 			}
 
 			return $method;
