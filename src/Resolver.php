@@ -11,7 +11,7 @@
 		/**
 		 *
 		 */
-		public function __construct(Auryn\Provider $broker = NULL)
+		public function __construct(Auryn\Injector $broker = NULL)
 		{
 			$this->broker = $broker;
 		}
