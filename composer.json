@@ -19,9 +19,9 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"imarc/opus": "dev-master",
-		"dotink/flourish-core": "dev-master",
-		"willdurand/negotiation": "@stable"
+		"imarc/opus": "^1.0.0",
+		"dotink/flourish-core": "^1.0.0",
+		"willdurand/negotiation": "^1.3.0"
 	},
 	"autoload": {
 		"classmap": ["src/"]
