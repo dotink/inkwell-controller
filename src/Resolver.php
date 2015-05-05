@@ -3,10 +3,18 @@
 	use Auryn;
 	use Closure;
 	use Inkwell\Routing;
+	use Dotink\Flourish;
 
 	class Resolver implements Routing\ResolverInterface
 	{
 		const CONTROLLER_CLASS = 'Inkwell\Controller\BaseController';
+
+
+		/**
+		 *
+		 */
+		private $broker = NULL;
+
 
 		/**
 		 *
@@ -16,54 +24,98 @@
 			$this->broker = $broker;
 		}
 
+
+		/**
+		 * Execute a resolved action
+		 *
+		 * @access public
+		 * @param mixed $action A callable or callable representation of the action
+		 * @return mixed The result of the action being executed
+		 */
+		public function execute($action)
+		{
+			return $this->broker
+				? $this->broker->execute($action)
+				: $action();
+		}
+
+
 		/**
 		 *
 		 */
 		public function resolve($action, Array $context)
 		{
 			$controller = NULL;
-			$callback   = FALSE;
-			$broker     = $this->broker;
+			$callable   = FALSE;
+			$router     = $context['router'];
 
 			if (is_string($action)) {
 				if (strpos($action, '::') !== FALSE) {
+
+					//
+					// The string appears to be a Class::method callback, so we'll try to
+					// instantiate the class and return a more formal callable.
+					//
+
 					list($class, $action) = explode('::', $action);
 
-					if (!class_exists($class) || !is_callable([$class, $action])) {
-						$context['router']->defer();
+					if (!is_callable([$class, $action])) {
+						$router->defer();
 
-					} elseif ($broker) {
-						$controller = $broker->make($class);
+					} elseif ($this->broker) {
+						$controller = $this->broker->make($class);
 
 					} else {
 						$controller = new $class();
 					}
 
-					$callback = [$controller, $action];
+					$callable = [$controller, $action];
 
 				} elseif (function_exists($action)) {
-					$callback = $action;
+
+					//
+					// The string appears to be a function so we'll use it as our callable
+					//
+
+					$callable = $action;
+
+				} else {
+
+					//
+					// The default response is false, which indicates that no action should
+					// attempt to be executed.  This will leave whatever the string was as the
+					// response body.
+					//
+
 				}
 
 			} elseif ($action instanceof Closure) {
-				$controller = $broker->make(self::CONTROLLER_CLASS);
-				$callback   = $controller;
-				$action     = Closure::bind(function() use ($broker, $action, $controller) {
-					$action = $action->bindTo($controller);
 
-					return $broker
-						? $broker->execute($action)
-						: $action();
+				//
+				// If the route target is a closure, we're going to instantiate a base controller
+				// and make use of prepare/__invoke to execute it.
+				//
 
-				}, $controller);
+				$controller = $callable = $this->broker->make(self::CONTROLLER_CLASS);
+				$action     = function() use ($action, $controller) {
+					return $this->execute($action->bindTo($controller));
+				};
 
+			} else {
+				throw new Flourish\ProgrammerException(
+					'Invalid router target %s', $action
+				);
 			}
 
-			if (isset($controller) && is_a($controller, self::CONTROLLER_CLASS)) {
-				$controller->__prepare($action, $context);
+			if (is_a($controller, self::CONTROLLER_CLASS)) {
+				if (is_string($action) && method_exists(self::CONTROLLER_CLASS, $action)) {
+					$router->defer();
+				}
+
+				$controller->prepare($action, $context);
 			}
 
-			return $callback;
+			return $callable;
 		}
 	}
 }

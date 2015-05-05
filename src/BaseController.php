@@ -65,16 +65,6 @@
 		/**
 		 *
 		 */
-		public function __prepare($action, $context = array())
-		{
-			$this->action  = $action;
-			$this->context = array_merge($this->context, $context);
-		}
-
-
-		/**
-		 *
-		 */
 		public function __set($property, $value)
 		{
 			return $this[$property] = $value;
@@ -141,6 +131,16 @@
 			}
 
 			return $this->context[$offset];
+		}
+
+
+		/**
+		 *
+		 */
+		public function prepare($action, $context = array())
+		{
+			$this->action  = $action;
+			$this->context = array_merge($this->context, $context);
 		}
 
 
