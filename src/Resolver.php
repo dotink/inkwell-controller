@@ -48,6 +48,7 @@
 			$controller = NULL;
 			$callable   = FALSE;
 			$router     = $context['router'];
+			$request    = $context['request'];
 
 			if (is_string($action)) {
 				if (strpos($action, '::') !== FALSE) {
@@ -58,6 +59,10 @@
 					//
 
 					list($class, $action) = explode('::', $action);
+
+					if ($router->getEntryAction() === FALSE) {
+						$action = $request->params->get('action', $action);
+					}
 
 					if (!is_callable([$class, $action])) {
 						$router->defer();
